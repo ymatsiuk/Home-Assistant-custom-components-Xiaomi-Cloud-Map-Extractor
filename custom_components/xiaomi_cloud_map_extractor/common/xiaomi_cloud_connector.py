@@ -133,6 +133,7 @@ class XiaomiCloudConnector:
 
     def get_device_details(self, token: str,
                            country: str) -> Tuple[Optional[str], Optional[str], Optional[str], Optional[str]]:
+        _LOGGER.debug("The country is: %s", country)
         countries_to_check = CONF_AVAILABLE_COUNTRIES
         if country is not None:
             countries_to_check = [country]
@@ -146,7 +147,9 @@ class XiaomiCloudConnector:
                 user_id = found[0]["uid"]
                 device_id = found[0]["did"]
                 model = found[0]["model"]
+                _LOGGER.debug("The country is: %s", country)
                 return country, user_id, device_id, model
+        _LOGGER.debug("The country is: %s", country)
         return None, None, None, None
 
     def get_devices(self, country: str) -> Any:
@@ -189,7 +192,9 @@ class XiaomiCloudConnector:
         return None
 
     def get_api_url(self, country: str) -> str:
-        return "https://" + ("" if country == "cn" else (country + ".")) + "api.io.mi.com/app"
+        api_url = "https://" + ("" if country == "cn" else (country + ".")) + "api.io.mi.com/app"
+        _LOGGER.debug("API URL is: %s", api_url)
+        return api_url
 
     def signed_nonce(self, nonce: str) -> str:
         hash_object = hashlib.sha256(base64.b64decode(self._ssecurity) + base64.b64decode(nonce))
